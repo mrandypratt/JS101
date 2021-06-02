@@ -1,0 +1,9 @@
+Keywords:
+START
+SET - Variable
+GET - Input
+PRINT - Display Output
+READ - Retrieve Variable Output
+IF/ELSE IF/ELSE - Conditional Logic
+WHILE - Looping Logic
+END
