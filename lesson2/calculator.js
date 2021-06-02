@@ -1,34 +1,63 @@
 // import readline
 const readline = require('readline-sync');
+const MESSAGES = require('./calculator_messages.json');
 
-// Prompt function
+// Request Language
+function getLanguage() {
+  while (true) {
+    prompt(MESSAGES.english.selectLanugage);
+    prompt(MESSAGES.spanish.selectLanugage);
+    prompt(MESSAGES.languageOptions);
+    let lang = readline.question();
+    if (lang === '1') {
+      return "english";
+    } else if (lang === '2') {
+      return 'spanish';
+    } else {
+      prompt(MESSAGES.english.invalidLanguage);
+      prompt(MESSAGES.spanish.invalidLanguage);
+    }
+  }
+}
+
+// Create Prompts
 function prompt(message) {
   console.log(`=> ${message}`);
 }
 
+// Get valid numbers from User
 function getNumberFromUser() {
   while (true) {
     let num = readline.question();
+    if (num === 'exit') {
+      return false;
+    }
     if (!Number(num)) {
-      prompt("Please enter a valid number");
+      prompt(MESSAGES[language].invalidNumber);
     } else {
       return Number(num);
     }
   }
 }
 
+// Get valid operation from User
 function getOperationFromUser() {
   while (true) {
-    prompt('Select an Operation:\n1. Add 2. Subtract 3. Multiply 4. Divide');
-    let operation = Number(readline.question());
+    prompt(MESSAGES[language].selectOperation);
+    let operation = readline.question();
+    if (operation === 'exit') {
+      return false;
+    }
+    operation = Number(operation);
     if (operation >= 1 && operation <= 4) {
       return operation;
     } else {
-      prompt("That was not a valid selection");
+      prompt(MESSAGES[language].invalidOperation);
     }
   }
 }
 
+// Calculate numbers with selected operation
 function calculate(num1, num2, operation) {
   switch (operation) {
     case 1:
@@ -40,24 +69,33 @@ function calculate(num1, num2, operation) {
     case 4:
       return num1 / num2;
     default:
-      return `${operation} is not a valid operation.`;
+      return `${operation} ${messages.notValid}`;
   }
 }
 
-// Greet User
-prompt("Welcome to the Calculator!");
+// Beginning of Program
 
-// Request Numbers and Operation
-prompt("Provide the first number:");
-let num1 = getNumberFromUser();
+//Request Language
+const language = getLanguage();
+prompt(MESSAGES[language].greet);
+prompt(MESSAGES[language].exit);
 
-prompt("Provide the second number:");
-let num2 = getNumberFromUser();
+while (true) {
+  // Request Numbers and Operation
+  prompt(MESSAGES[language].firstNumber);
+  let num1 = getNumberFromUser();
+  if (num1 === false) { break; }
 
-let operation = getOperationFromUser();
+  prompt(MESSAGES[language].secondNumber);
+  let num2 = getNumberFromUser();
+  if (num2 === false) { break; }
 
-// perform the operation on the two numbers
-let result = calculate(num1, num2, operation);
+  let operation = getOperationFromUser();
+  if (operation === false) { break; }
 
-// Display the result
-prompt(result);
+  // perform the operation on the two numbers
+  let result = calculate(num1, num2, operation);
+
+  // Display the result
+  prompt(`${result}`);
+}

@@ -1,0 +1,29 @@
+{
+  "languageOptions": "1. English 2. Español",
+  
+  "english": {
+    "selectLanugage": "Please select a language.",
+    "invalidLanguage": "Invalid language selection",
+    "greet": "Welcome to the Calculator!",
+    "exit": "Type \"exit\" to stop.",
+    "firstNumber" : "Provide the first number:",
+    "secondNumber": "Provide the second number:",
+    "invalidOperation": "That was not a valid Operation",
+    "selectOperation": "Select an Operation:\n1. Add 2. Subtract 3. Multiply 4. Divide",
+    "invalidNumber": "Please enter a valid number",
+    "notValid": "is not valid."
+  },
+
+  "spanish": {
+    "selectLanugage": "Por favor, seleccione un idioma.",
+    "invalidLanguage": "Selección de idioma no válida",
+    "greet":"Bienvenida a la calculadora",
+    "exit": "Escriba \"exit\" para detener",
+    "firstNumber" : "Proporcione el primer número:",
+    "secondNumber": "Proporcione el segundo número:",
+    "invalidOperation": "Esa no fue una Operación válida",
+    "selectOperation": "Seleccionar una operación:\n1. Agregar 2. Sustraer 3. Multiplicar 4. Dividir",
+    "invalidNumber": "Por favor ingrese un número valido",
+    "notValid": "no es válida"
+  }
+}
