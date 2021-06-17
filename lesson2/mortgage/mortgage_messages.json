@@ -1,0 +1,12 @@
+{
+  "welcome": "Welcome to the Mortage Calculator!",
+  "explainApp": "This app calculates your Monthly Payment",
+  "explainSteps": "Please enter the following information or enter \"exit\" to quit.",
+
+  "requestLoanAmount": "1. Loan Amount (ex. type \"1000.00\" for a $1,000.00 loan)",
+  "requestLoanDuration": "2. Duration of Loan in Months",
+  "requestAPR": "3. Annual Percentage Rage (APR) (ex. type \"2.59\" for 2.59%)",
+  "monthlyPayment": "Your Monthly Payment is",
+  "invalidInput": "Invalid Input. Please Try Again."
+
+}

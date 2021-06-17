@@ -1,0 +1,21 @@
+  TEST: getLoanAmount()
+  //text input: Number("abc") => NaN
+  //no input: Number("") => 0
+  //only space: Number(" ") => 0
+  //negative number Number(-5) => -5
+  //zero: Number("0") => zero
+  //too many decimal points: Number("1000.00067") => 1000.00067
+  //number and text together: Number("a100.00") => NaN
+  //boolean input: Number("true") => && Number("false") => NaN
+  //number with comma: Number("1,000,000.00") => NaN
+
+  TEST: getLoanDuration()
+  //text input: Number("abc") => NaN
+  //no input: Number("") => 0
+  //only space: Number(" ") => 0
+  //negative number Number(-5) => -5
+  //zero: Number("0") => zero
+  //too many decimal points: Number("1000.00067") => 1000.00067
+  //number and text together: Number("a100.00") => NaN
+  //boolean input: Number("true") => && Number("false") => NaN
+  //number with comma: Number("1,000,000.00") => NaN
