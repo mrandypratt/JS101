@@ -2,6 +2,9 @@
 const readline = require('readline-sync');
 const MESSAGES = require('./calculator_messages.json');
 
+//Determine Language
+const language = getLanguage();
+
 // Request Language
 function getLanguage() {
   while (true) {
@@ -69,29 +72,35 @@ function calculate(num1, num2, operation) {
     case 4:
       return num1 / num2;
     default:
-      return `${operation} ${messages.notValid}`;
+      return `${operation} ${MESSAGES.notValid}`;
   }
 }
 
 // Beginning of Program
 
-//Request Language
-const language = getLanguage();
+//Request Greet in User's selected language
 prompt(MESSAGES[language].greet);
 prompt(MESSAGES[language].exit);
 
 while (true) {
+
   // Request Numbers and Operation
   prompt(MESSAGES[language].firstNumber);
   let num1 = getNumberFromUser();
-  if (num1 === false) { break; }
+  if (num1 === false) {
+    break;
+  }
 
   prompt(MESSAGES[language].secondNumber);
   let num2 = getNumberFromUser();
-  if (num2 === false) { break; }
+  if (num2 === false) {
+    break;
+  }
 
   let operation = getOperationFromUser();
-  if (operation === false) { break; }
+  if (operation === false) {
+    break;
+  }
 
   // perform the operation on the two numbers
   let result = calculate(num1, num2, operation);

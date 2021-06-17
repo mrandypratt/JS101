@@ -15,7 +15,9 @@ function getLoanAmount() {
   while (true) {
     prompt(MESSAGES.requestLoanAmount);
     let loanAmount = readline.question();
-    if (loanAmount === 'exit') { return false; }
+    if (loanAmount === 'exit') {
+      return false;
+    }
     //Filter out unwanted input
     if (Number(loanAmount) > 0) {
       //Return Number with 2 decimal places
@@ -31,7 +33,9 @@ function getLoanDuration() {
   while (true) {
     prompt(MESSAGES.requestLoanDuration);
     let loanDuration = readline.question();
-    if (loanDuration === 'exit') { return false; }
+    if (loanDuration === 'exit') {
+      return false;
+    }
     //Filter out unwanted input
     if (Number(loanDuration) > 0) {
       //Return Number with 2 decimal places
@@ -46,7 +50,9 @@ function getAnnualInterestRate() {
   while (true) {
     prompt(MESSAGES.requestAPR);
     let APR = readline.question();
-    if (APR === 'exit') { return false; }
+    if (APR === 'exit') {
+      return false;
+    }
     //Filter out unwanted input
     if (Number(APR) > 0) {
       //Return Number with 2 decimal places
@@ -65,8 +71,10 @@ function calculateMonthlyInterestRate(apr) {
 
 //Calculate and Display Monthly Payment
 function calculateMonthlyPayment(loanAmount, loanDurationMonths, monthlyInterestRate) {
+
   //Calculate
   let monthlyPayment = loanAmount * (monthlyInterestRate / (1 - Math.pow((1 + monthlyInterestRate), (-loanDurationMonths))));
+
   //Convert to 2 decimals
   monthlyPayment = monthlyPayment.toFixed(2);
   //Display to User
@@ -76,15 +84,21 @@ function calculateMonthlyPayment(loanAmount, loanDurationMonths, monthlyInterest
 while (true) {
   //Request Loan Amount (floating point or integer)
   let loanAmount = getLoanAmount();
-  if (loanAmount === false) { break; }
+  if (loanAmount === false) {
+    break;
+  }
 
   //Request Loan Duration in Months
   let loanDurationMonths = getLoanDuration();
-  if (loanDurationMonths === false) { break; }
+  if (loanDurationMonths === false) {
+    break;
+  }
 
   //Request Annual Percentage Rate (APR) & Convert to Monthly Interest
   let annualInterestRate = getAnnualInterestRate();
-  if (annualInterestRate === false) { break; }
+  if (annualInterestRate === false) {
+    break;
+  }
 
   //Convert to Monthly Interest Rate
   let monthlyInterestRate = calculateMonthlyInterestRate(annualInterestRate);
@@ -92,7 +106,3 @@ while (true) {
   //Calculate Monthly Payment
   calculateMonthlyPayment(loanAmount, loanDurationMonths, monthlyInterestRate);
 }
-
-
-
-

@@ -3,7 +3,7 @@
   
   "english": {
     "selectLanugage": "Please select a language.",
-    "invalidLanguage": "Invalid language selection",
+    "invalidLanguage": "Invalid language selection. Please respond 1 or 2",
     "greet": "Welcome to the Calculator!",
     "exit": "Type \"exit\" to stop.",
     "firstNumber" : "Provide the first number:",
@@ -16,7 +16,7 @@
 
   "spanish": {
     "selectLanugage": "Por favor, seleccione un idioma.",
-    "invalidLanguage": "Selección de idioma no válida",
+    "invalidLanguage": "Selección de idioma no válida. Responde con 1 o 2, por favor",
     "greet":"Bienvenida a la calculadora",
     "exit": "Escriba \"exit\" para detener",
     "firstNumber" : "Proporcione el primer número:",
