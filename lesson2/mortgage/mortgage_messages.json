@@ -7,6 +7,7 @@
   "requestLoanDuration": "2. Duration of Loan in Months",
   "requestAPR": "3. Annual Percentage Rage (APR) (ex. type \"2.59\" for 2.59%)",
   "monthlyPayment": "Your Monthly Payment is",
-  "invalidInput": "Invalid Input. Please Try Again."
-
+  "invalidInput": "Invalid Input. Please Try Again.",
+  "tryAgain": "Would you like to calculate another mortgage? (y/n)",
+  "goodbye": "Thank you for using Mortgage Calculator. Goodbye!"
 }

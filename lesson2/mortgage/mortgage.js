@@ -5,104 +5,151 @@ function prompt(string) {
   console.log(`=> ${string}`);
 }
 
-//Greet User and Explain Process
-prompt(MESSAGES.welcome);
-prompt(MESSAGES.explainApp);
-prompt(MESSAGES.explainSteps);
+function checkIfExit(response) {
+  if (response.toLowerCase() === 'exit') {
+    prompt(MESSAGES.goodbye);
+    return true;
+  } else {
+    return false;
+  }
+}
 
-//Get loan Amount from User
 function getLoanAmount() {
   while (true) {
     prompt(MESSAGES.requestLoanAmount);
     let loanAmount = readline.question();
-    if (loanAmount === 'exit') {
+    let isExit = checkIfExit(loanAmount);
+    if (isExit) {
       return false;
     }
-    //Filter out unwanted input
-    if (Number(loanAmount) > 0) {
-      //Return Number with 2 decimal places
+    let validLoanAmount = isValidLoanAmount(loanAmount);
+    if (validLoanAmount) {
       return Number(loanAmount).toFixed(2);
-    } else {
-      prompt(MESSAGES.invalidInput);
     }
   }
 }
 
-//Get Loan Duration in Months
+function isValidLoanAmount(loanAmount) {
+    if (Number(loanAmount) > 0) {
+      return true;
+    } else {
+      prompt(MESSAGES.invalidInput);
+      return false;
+    }
+}
+
 function getLoanDuration() {
   while (true) {
     prompt(MESSAGES.requestLoanDuration);
     let loanDuration = readline.question();
-    if (loanDuration === 'exit') {
+    let isExit = checkIfExit(loanDuration);
+    if (isExit) {
       return false;
     }
-    //Filter out unwanted input
-    if (Number(loanDuration) > 0) {
-      //Return Number with 2 decimal places
+    let validLoanDuration = isValidLoanDuration(loanDuration);
+    if (validLoanDuration) {
       return Math.round(Number(loanDuration));
-    } else {
-      prompt(MESSAGES.invalidInput);
     }
   }
 }
 
-function getAnnualInterestRate() {
+function isValidLoanDuration(loanDuration) {
+  if (Number(loanDuration) > 0) {
+    return true;
+  } else {
+    prompt(MESSAGES.invalidInput);
+    return false;
+  }
+}
+
+function getAPR() {
   while (true) {
     prompt(MESSAGES.requestAPR);
     let APR = readline.question();
-    if (APR === 'exit') {
+    let isExit = checkIfExit(APR);
+    if (isExit) {
       return false;
     }
-    //Filter out unwanted input
-    if (Number(APR) > 0) {
-      //Return Number with 2 decimal places
+    let validAPR = isValidAPR(APR);
+    if (validAPR) {
       return Number(APR).toFixed(2);
-    } else {
-      prompt(MESSAGES.invalidInput);
     }
   }
 }
 
-//Convert APR to Monthly Rate
-function calculateMonthlyInterestRate(apr) {
-  //Convert number to percentage and divide by 12
-  return (apr / 100) / 12;
+function isValidAPR(APR) {
+  if (Number(APR) > 0) {
+    return true;
+  } else {
+    prompt(MESSAGES.invalidInput);
+    return false;
+  }
 }
 
-//Calculate and Display Monthly Payment
-function calculateMonthlyPayment(loanAmount, loanDurationMonths, monthlyInterestRate) {
+function calculateMonthlyInterestRate(APR) {
+  return (APR / 100) / 12;
+}
 
-  //Calculate
-  let monthlyPayment = loanAmount * (monthlyInterestRate / (1 - Math.pow((1 + monthlyInterestRate), (-loanDurationMonths))));
+function calculateMonthlyPayment(loanAmount, 
+ loanDurationMonths, monthlyInterestRate) {
 
-  //Convert to 2 decimals
-  monthlyPayment = monthlyPayment.toFixed(2);
-  //Display to User
+  let monthlyPayment = loanAmount * (monthlyInterestRate / 
+   (1 - Math.pow((1 + monthlyInterestRate), (-loanDurationMonths))));
+  return monthlyPayment.toFixed(2);
+}
+
+function displayMonthlyPayment(monthlyPayment) {
   prompt(`${MESSAGES.monthlyPayment} $${monthlyPayment}.`);
 }
 
+function seeIfUserWantsToTryAgain() {
+  while (true) {
+    prompt(MESSAGES.tryAgain)
+    let response = readline.question();
+    response = response.toLowerCase();
+    if (response === 'exit' || response === 'n') {
+      prompt(MESSAGES.goodbye);
+      return false;
+    } else if (response === 'y') {
+      return true;
+    } else {
+      prompt(MESSAGES.invalidInput)
+    }
+  }
+}
+
 while (true) {
-  //Request Loan Amount (floating point or integer)
+  prompt(MESSAGES.welcome);
+  prompt(MESSAGES.explainApp);
+  prompt(MESSAGES.explainSteps);
+
   let loanAmount = getLoanAmount();
   if (loanAmount === false) {
     break;
   }
 
-  //Request Loan Duration in Months
   let loanDurationMonths = getLoanDuration();
   if (loanDurationMonths === false) {
     break;
   }
 
-  //Request Annual Percentage Rate (APR) & Convert to Monthly Interest
-  let annualInterestRate = getAnnualInterestRate();
-  if (annualInterestRate === false) {
+  let APR = getAPR();
+  if (APR === false) {
     break;
   }
 
-  //Convert to Monthly Interest Rate
-  let monthlyInterestRate = calculateMonthlyInterestRate(annualInterestRate);
+  let monthlyPayment;
+  if (APR === 0) {
+    monthlyPayment = loanAmount / loanDurationMonths;
+  } else {
+    let monthlyInterestRate = calculateMonthlyInterestRate(APR);
+    monthlyPayment = calculateMonthlyPayment(loanAmount, loanDurationMonths, monthlyInterestRate);
+  }
 
-  //Calculate Monthly Payment
-  calculateMonthlyPayment(loanAmount, loanDurationMonths, monthlyInterestRate);
+  displayMonthlyPayment(monthlyPayment);
+  prompt("");
+  let tryAgain = seeIfUserWantsToTryAgain();
+  if (!tryAgain) {
+    break;
+  }
 }
