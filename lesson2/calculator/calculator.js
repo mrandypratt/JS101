@@ -1,11 +1,8 @@
-// import readline
 const readline = require('readline-sync');
 const MESSAGES = require('./calculator_messages.json');
 
-//Determine Language
 const language = getLanguage();
 
-// Request Language
 function getLanguage() {
   while (true) {
     prompt(MESSAGES.english.selectLanugage);
@@ -23,27 +20,27 @@ function getLanguage() {
   }
 }
 
-// Create Prompts
 function prompt(message) {
   console.log(`=> ${message}`);
 }
 
-// Get valid numbers from User
 function getNumberFromUser() {
   while (true) {
     let num = readline.question();
+    debugger;
     if (num === 'exit') {
       return false;
     }
-    if (!Number(num)) {
-      prompt(MESSAGES[language].invalidNumber);
+    if (Number(num) === 0) {
+      return Number(num);
+    } else if (!Number(num)) {
+      prompt(MESSAGES[language].invalidNumber); 
     } else {
       return Number(num);
     }
   }
 }
 
-// Get valid operation from User
 function getOperationFromUser() {
   while (true) {
     prompt(MESSAGES[language].selectOperation);
@@ -60,7 +57,6 @@ function getOperationFromUser() {
   }
 }
 
-// Calculate numbers with selected operation
 function calculate(num1, num2, operation) {
   switch (operation) {
     case 1:
@@ -70,7 +66,11 @@ function calculate(num1, num2, operation) {
     case 3:
       return num1 * num2;
     case 4:
-      return num1 / num2;
+      if (num2 === 0) {
+        return "Cannot Divide by Zero."
+      } else {
+        return num1 / num2;
+      }
     default:
       return `${operation} ${MESSAGES.notValid}`;
   }
@@ -78,13 +78,11 @@ function calculate(num1, num2, operation) {
 
 // Beginning of Program
 
-//Request Greet in User's selected language
 prompt(MESSAGES[language].greet);
 prompt(MESSAGES[language].exit);
 
 while (true) {
 
-  // Request Numbers and Operation
   prompt(MESSAGES[language].firstNumber);
   let num1 = getNumberFromUser();
   if (num1 === false) {
@@ -102,9 +100,7 @@ while (true) {
     break;
   }
 
-  // perform the operation on the two numbers
   let result = calculate(num1, num2, operation);
 
-  // Display the result
   prompt(`${result}`);
 }
