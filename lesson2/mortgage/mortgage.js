@@ -30,12 +30,12 @@ function getLoanAmount() {
 }
 
 function isValidLoanAmount(loanAmount) {
-    if (Number(loanAmount) > 0) {
-      return true;
-    } else {
-      prompt(MESSAGES.invalidInput);
-      return false;
-    }
+  if (Number(loanAmount) > 0) {
+    return true;
+  } else {
+    prompt(MESSAGES.invalidInput);
+    return false;
+  }
 }
 
 function getLoanDuration() {
@@ -90,11 +90,11 @@ function calculateMonthlyInterestRate(APR) {
   return (APR / 100) / 12;
 }
 
-function calculateMonthlyPayment(loanAmount, 
- loanDurationMonths, monthlyInterestRate) {
+function calculateMonthlyPayment(loanAmount,
+  loanDurationMonths, monthlyInterestRate) {
 
-  let monthlyPayment = loanAmount * (monthlyInterestRate / 
-   (1 - Math.pow((1 + monthlyInterestRate), (-loanDurationMonths))));
+  let monthlyPayment = loanAmount * (monthlyInterestRate /
+    (1 - Math.pow((1 + monthlyInterestRate), (-loanDurationMonths))));
   return monthlyPayment.toFixed(2);
 }
 
@@ -104,7 +104,7 @@ function displayMonthlyPayment(monthlyPayment) {
 
 function seeIfUserWantsToTryAgain() {
   while (true) {
-    prompt(MESSAGES.tryAgain)
+    prompt(MESSAGES.tryAgain);
     let response = readline.question();
     response = response.toLowerCase();
     if (response === 'exit' || response === 'n') {
@@ -113,7 +113,7 @@ function seeIfUserWantsToTryAgain() {
     } else if (response === 'y') {
       return true;
     } else {
-      prompt(MESSAGES.invalidInput)
+      prompt(MESSAGES.invalidInput);
     }
   }
 }
@@ -143,12 +143,12 @@ while (true) {
     monthlyPayment = loanAmount / loanDurationMonths;
   } else {
     let monthlyInterestRate = calculateMonthlyInterestRate(APR);
-    monthlyPayment = calculateMonthlyPayment(loanAmount, loanDurationMonths, monthlyInterestRate);
+    monthlyPayment = calculateMonthlyPayment(
+      loanAmount, loanDurationMonths, monthlyInterestRate);
   }
 
   displayMonthlyPayment(monthlyPayment);
   prompt("");
-  
   let tryAgain = seeIfUserWantsToTryAgain();
   if (!tryAgain) {
     break;
