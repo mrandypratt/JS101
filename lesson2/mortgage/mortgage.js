@@ -148,6 +148,7 @@ while (true) {
 
   displayMonthlyPayment(monthlyPayment);
   prompt("");
+  
   let tryAgain = seeIfUserWantsToTryAgain();
   if (!tryAgain) {
     break;
