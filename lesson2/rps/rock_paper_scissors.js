@@ -19,8 +19,6 @@ function playerWins(choice, computerChoice) {
       (choice === 'spock' && computerChoice === 'rock');
 }
 
-
-
 function determineWinner(choice, computerChoice) {
   prompt(`You chose ${choice}, computer chose ${computerChoice}`);
 
@@ -43,11 +41,12 @@ prompt('ProTip: Use first letter for quick selection (use "k" for Spock)');
 console.log("");
 
 while (true) {
-  
+
   prompt(`Choose one: ${VALID_CHOICES.join(', ')}`);
   let choice = readline.question();
 
-  while (!(VALID_CHOICES.includes(choice) || VALID_SHORTCUTS.includes(choice[0]))) {
+  while (!(VALID_CHOICES.includes(choice) ||
+    VALID_SHORTCUTS.includes(choice[0]))) {
     prompt("That's not a valid choice");
     choice = readline.question();
   }
