@@ -24,14 +24,18 @@ const CHOICES = {
   }
 }
 
+const LONGHAND_OPTIONS = Object.keys(CHOICES);
+const SHORTHAND_OPTIONS = [];
+Object.values(CHOICES).forEach(object => SHORTHAND_OPTIONS.push(object.shorthand));
+
 function prompt(message) {
   console.log(`=> ${message}`);
 }
 
 function determineWinner(choice, computerChoice) {
 
-  if (playerWins(choice, computerChoice)) {
-    return 'human';
+  if (CHOICES[choice].beats.includes(computerChoice)) {
+    return 'Human';
   } else if (choice === computerChoice) {
     return 'tie';
   } else {
@@ -44,29 +48,29 @@ let computerWinCount = 0;
 let isGrandWinner = false;
 
 prompt("Welcome to Rock, Paper, Scissors, Lizard, Spock!");
-prompt(`Best of Five: first to ${WIN_SCORE} wins is the Grand Winner!`);
+prompt(`Best of Five: first to ${WIN_SCORE} wins will be declared the Grand Winner!`);
 prompt('ProTip: Use first letter for quick selection (use "k" for Spock)');
 console.log("");
 
 while (true) {
 
-  prompt(`Choose one: ${CHOICES.key.join(', ')}`);
+  prompt(`Choose one: ${Object.keys(CHOICES).join(', ')}`);
   let choice = readline.question();
-// Fixed Logic
-  while (!CHOICES.keys().includes(choice) && 
-         !CHOICES..includes(choice)) {
+
+  while (!LONGHAND_OPTIONS.includes(choice) && 
+  !SHORTHAND_OPTIONS.includes(choice)) {
     prompt("That's not a valid choice");
     choice = readline.question();
   }
 
-  console.log("");
+  console.clear();
 
-  if (!VALID_CHOICES.includes(choice)) {
-    choice = VALID_CHOICES[VALID_SHORTCUTS.indexOf(choice)];
+  if (SHORTHAND_OPTIONS.includes(choice)) {
+    choice = LONGHAND_OPTIONS[SHORTHAND_OPTIONS.indexOf(choice)];
   }
 
-  let randomIndex = Math.floor(Math.random() * CHOICES.keys().length);
-  let computerChoice = VALID_CHOICES[randomIndex];
+  let randomIndex = Math.floor(Math.random() * Object.keys(CHOICES).length);
+  let computerChoice = LONGHAND_OPTIONS[randomIndex];
   
   prompt(`You chose ${choice}, computer chose ${computerChoice}`);
 
@@ -105,7 +109,7 @@ while (true) {
     humanWinCount = 0;
     computerWinCount = 0;
     isGrandWinner = false;
+    console.clear();
   }
   
-  //console.clear();
 }
