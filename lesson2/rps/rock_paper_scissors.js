@@ -28,32 +28,33 @@ const LONGHAND_OPTIONS = Object.keys(CHOICES);
 const SHORTHAND_OPTIONS = [];
 Object.values(CHOICES).forEach(object => SHORTHAND_OPTIONS.push(object.shorthand));
 
+let humanWinCount = 0;
+let computerWinCount = 0;
+let isGrandWinner = false;
+
 function prompt(message) {
   console.log(`=> ${message}`);
 }
 
 function getPlayerChoice() {
-  prompt(`Choose one: ${Object.keys(CHOICES).join(', ')}`);
-  
-  let playerChoice = readline.question();
-
-  while (!LONGHAND_OPTIONS.includes(playerChoice) && 
-         !SHORTHAND_OPTIONS.includes(playerChoice)) {
-    prompt("That's not a valid choice");
-    playerChoice = readline.question();
-  } 
-  
-  if (SHORTHAND_OPTIONS.includes(choice)) {
-    choice = LONGHAND_OPTIONS[SHORTHAND_OPTIONS.indexOf(choice)];
+  while (true) {
+    prompt(`Choose one: ${Object.keys(CHOICES).join(', ')}`);
+    let playerChoice = readline.question();
+    console.clear();
+    if (SHORTHAND_OPTIONS.includes(playerChoice)) {
+      playerChoice = LONGHAND_OPTIONS[SHORTHAND_OPTIONS.indexOf(playerChoice)];
+    }
+    if (LONGHAND_OPTIONS.includes(playerChoice)) {
+      return playerChoice; 
+    } 
+    prompt(`"${playerChoice}" is not a valid choice`);
   }
-  
-  return playerChoice;
 }
 
 function declareRoundWinner(playerChoice, computerChoice) {
   if (CHOICES[playerChoice].beats.includes(computerChoice)) {
     prompt('You Win!');
-    return 'Human';
+    return 'human';
   } else if (playerChoice === computerChoice) {
     prompt("It's a Tie!");
     return 'tie';
@@ -74,20 +75,24 @@ function declareGrandWinner(humanWinCount, computerWinCount) {
 }
 
 function askToPlayAgain() {
-    prompt('Do you want to play again (y/n)?');
-  
-    let playAgain = readline.question().toLowerCase();
+
+
     do {
-      if (playAgain = 'y') return true;
-      if (playAgain = 'n') return false;
+      prompt('Do you want to play again (y/n)?');
+      let playAgain = readline.question().toLowerCase();
+      if (playAgain === 'y') return true;
+      if (playAgain === 'n') return false;
       prompt('Please enter "y" or "n".');
       playAgain = readline.question().toLowerCase();
     } while (true)
 }
 
-let humanWinCount = 0;
-let computerWinCount = 0;
-let isGrandWinner = false;
+function resetScore() {
+  humanWinCount = 0;
+  computerWinCount = 0;
+  isGrandWinner = false;
+  console.clear();
+}
 
 prompt("Welcome to Rock, Paper, Scissors, Lizard, Spock!");
 prompt(`Best of Five: first to ${WIN_SCORE} wins will be declared the Grand Winner!`);
@@ -98,34 +103,27 @@ while (true) {
   
   let playerChoice = getPlayerChoice();
 
-  console.clear();
-
   let randomIndex = Math.floor(Math.random() * Object.keys(CHOICES).length);
   let computerChoice = LONGHAND_OPTIONS[randomIndex];
   
   prompt(`You chose ${playerChoice}, computer chose ${computerChoice}`);
 
-  let winner = declareRoundWinner(playerChoice, computerChoice);
+  let roundWinner = declareRoundWinner(playerChoice, computerChoice);
   
-  if (winner === 'computer') {
+  if (roundWinner === 'computer') {
     computerWinCount += 1;
-  } else if (winner === 'human') {
+  } else if (roundWinner === 'human') {
     humanWinCount += 1;
   } 
 
   prompt(`Human: ${humanWinCount}, Computer: ${computerWinCount}`);
+  console.log("");
   
   isGrandWinner = declareGrandWinner(humanWinCount, computerWinCount);
   
   if (isGrandWinner) {
     let playAgain = askToPlayAgain();
     if (!playAgain) break;
+    if (playAgain) resetScore();
   }
-
-  humanWinCount = 0;
-  computerWinCount = 0;
-  isGrandWinner = false;
-  console.clear();
-}
-  
 }
