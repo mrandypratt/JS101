@@ -1,34 +1,88 @@
 const readline = require('readline-sync');
-const VALID_CHOICES = ['rock', 'paper', 'scissors', 'lizard', 'spock'];
-const VALID_SHORTCUTS = ['r', 'p', 's', 'l', 'k'];
+
+const WIN_SCORE = 3; 
+const CHOICES = {
+  'rock': { 
+    shorthand: 'r', 
+    beats: ['scissors', 'lizard']
+  },
+  'paper': { 
+    shorthand: 'p', 
+    beats: ['rock', 'spock']
+  },
+  'scissors': { 
+    shorthand: 's', 
+    beats: ['paper', 'lizard']
+  },
+  'lizard': { 
+    shorthand: 'l', 
+    beats: ['spock', 'paper']
+  },
+  'spock': { 
+    shorthand: 'k', 
+    beats: ['scissors', 'rock']
+  }
+}
+
+const LONGHAND_OPTIONS = Object.keys(CHOICES);
+const SHORTHAND_OPTIONS = [];
+Object.values(CHOICES).forEach(object => SHORTHAND_OPTIONS.push(object.shorthand));
 
 function prompt(message) {
   console.log(`=> ${message}`);
 }
 
-function playerWins(choice, computerChoice) {
-  return (choice === 'rock' && computerChoice === 'scissors') ||
-      (choice === 'rock' && computerChoice === 'lizard') ||
-      (choice === 'paper' && computerChoice === 'rock') ||
-      (choice === 'paper' && computerChoice === 'spock') ||
-      (choice === 'scissors' && computerChoice === 'paper') ||
-      (choice === 'scissors' && computerChoice === 'lizard') ||
-      (choice === 'lizard' && computerChoice === 'spock') ||
-      (choice === 'lizard' && computerChoice === 'paper') ||
-      (choice === 'spock' && computerChoice === 'scissors') ||
-      (choice === 'spock' && computerChoice === 'rock');
+function getPlayerChoice() {
+  prompt(`Choose one: ${Object.keys(CHOICES).join(', ')}`);
+  
+  let playerChoice = readline.question();
+
+  while (!LONGHAND_OPTIONS.includes(playerChoice) && 
+         !SHORTHAND_OPTIONS.includes(playerChoice)) {
+    prompt("That's not a valid choice");
+    playerChoice = readline.question();
+  } 
+  
+  if (SHORTHAND_OPTIONS.includes(choice)) {
+    choice = LONGHAND_OPTIONS[SHORTHAND_OPTIONS.indexOf(choice)];
+  }
+  
+  return playerChoice;
 }
 
-function determineWinner(choice, computerChoice) {
-  prompt(`You chose ${choice}, computer chose ${computerChoice}`);
-
-  if (playerWins(choice, computerChoice)) {
-    return 'human';
-  } else if (choice === computerChoice) {
+function declareRoundWinner(playerChoice, computerChoice) {
+  if (CHOICES[playerChoice].beats.includes(computerChoice)) {
+    prompt('You Win!');
+    return 'Human';
+  } else if (playerChoice === computerChoice) {
+    prompt("It's a Tie!");
     return 'tie';
   } else {
+    prompt('Computer Wins!');
     return 'computer';
   }
+}
+
+function declareGrandWinner(humanWinCount, computerWinCount) {
+  if (humanWinCount === WIN_SCORE) {
+    prompt("You are the Grand Winner!");
+    return true;
+  } else if (computerWinCount === WIN_SCORE) {
+    prompt("Computer is the Grand Winner");
+    return true;
+  }
+}
+
+function askToPlayAgain() {
+    prompt('Do you want to play again (y/n)?');
+  
+    let playAgain = readline.question().toLowerCase();
+    do {
+      if (playAgain = 'y') return true;
+      if (playAgain = 'n') return false;
+      prompt('Please enter "y" or "n".');
+      playAgain = readline.question().toLowerCase();
+    } while (true)
 }
 
 let humanWinCount = 0;
@@ -36,64 +90,42 @@ let computerWinCount = 0;
 let isGrandWinner = false;
 
 prompt("Welcome to Rock, Paper, Scissors, Lizard, Spock!");
-prompt("Best of Five: first to three wins is the Grand Winner!");
+prompt(`Best of Five: first to ${WIN_SCORE} wins will be declared the Grand Winner!`);
 prompt('ProTip: Use first letter for quick selection (use "k" for Spock)');
 console.log("");
 
 while (true) {
+  
+  let playerChoice = getPlayerChoice();
 
-  prompt(`Choose one: ${VALID_CHOICES.join(', ')}`);
-  let choice = readline.question();
+  console.clear();
 
-  while (!(VALID_CHOICES.includes(choice) ||
-    VALID_SHORTCUTS.includes(choice[0]))) {
-    prompt("That's not a valid choice");
-    choice = readline.question();
-  }
+  let randomIndex = Math.floor(Math.random() * Object.keys(CHOICES).length);
+  let computerChoice = LONGHAND_OPTIONS[randomIndex];
+  
+  prompt(`You chose ${playerChoice}, computer chose ${computerChoice}`);
 
-  console.log("");
-
-  if (!VALID_CHOICES.includes(choice)) {
-    choice = VALID_CHOICES[VALID_SHORTCUTS.indexOf(choice)];
-  }
-
-  let randomIndex = Math.floor(Math.random() * VALID_CHOICES.length);
-  let computerChoice = VALID_CHOICES[randomIndex];
-
-  let winner = determineWinner(choice, computerChoice);
-
+  let winner = declareRoundWinner(playerChoice, computerChoice);
+  
   if (winner === 'computer') {
-    prompt('Computer Wins!');
     computerWinCount += 1;
   } else if (winner === 'human') {
-    prompt('You Win!');
     humanWinCount += 1;
-  } else {
-    prompt("It's a tie!");
-  }
+  } 
 
   prompt(`Human: ${humanWinCount}, Computer: ${computerWinCount}`);
-
-  if (humanWinCount === 3) {
-    prompt("You are the Grand Winner!");
-    isGrandWinner = true;
-  } else if (computerWinCount === 3) {
-    prompt("Computer is the Grand Winner");
-    isGrandWinner = true;
-  }
-
+  
+  isGrandWinner = declareGrandWinner(humanWinCount, computerWinCount);
+  
   if (isGrandWinner) {
-    prompt('Do you want to play again (y/n)?');
-    let answer = readline.question().toLowerCase();
-    while (answer[0] !== 'n' && answer[0] !== 'y') {
-      prompt('Please enter "y" or "n".');
-      answer = readline.question().toLowerCase();
-    }
-
-    if (answer[0] !== 'y') break;
-
-    humanWinCount = 0;
-    computerWinCount = 0;
-    isGrandWinner = false;
+    let playAgain = askToPlayAgain();
+    if (!playAgain) break;
   }
+
+  humanWinCount = 0;
+  computerWinCount = 0;
+  isGrandWinner = false;
+  console.clear();
+}
+  
 }
