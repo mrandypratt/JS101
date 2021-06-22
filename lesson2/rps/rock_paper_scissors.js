@@ -75,16 +75,15 @@ function declareGrandWinner(humanWinCount, computerWinCount) {
 }
 
 function askToPlayAgain() {
-
-
-    do {
-      prompt('Do you want to play again (y/n)?');
-      let playAgain = readline.question().toLowerCase();
-      if (playAgain === 'y') return true;
-      if (playAgain === 'n') return false;
-      prompt('Please enter "y" or "n".');
-      playAgain = readline.question().toLowerCase();
-    } while (true)
+  while (true) {
+    prompt('Do you want to play again (y/n)?');
+    let playAgain = readline.question().toLowerCase();
+    console.clear();
+    if (playAgain === 'y') return true;
+    if (playAgain === 'n') return false;
+    prompt('Please enter "y" or "n".');
+    playAgain = readline.question().toLowerCase();
+  }
 }
 
 function resetScore() {
@@ -123,7 +122,11 @@ while (true) {
   
   if (isGrandWinner) {
     let playAgain = askToPlayAgain();
-    if (!playAgain) break;
-    if (playAgain) resetScore();
+    if (playAgain) {
+      resetScore()
+    } else {
+      prompt("Goodbye!");
+      break;
+    }
   }
 }
