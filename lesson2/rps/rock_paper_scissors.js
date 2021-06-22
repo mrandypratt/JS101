@@ -32,15 +32,57 @@ function prompt(message) {
   console.log(`=> ${message}`);
 }
 
-function determineWinner(choice, computerChoice) {
+function getPlayerChoice() {
+  prompt(`Choose one: ${Object.keys(CHOICES).join(', ')}`);
+  
+  let playerChoice = readline.question();
 
-  if (CHOICES[choice].beats.includes(computerChoice)) {
+  while (!LONGHAND_OPTIONS.includes(playerChoice) && 
+         !SHORTHAND_OPTIONS.includes(playerChoice)) {
+    prompt("That's not a valid choice");
+    playerChoice = readline.question();
+  } 
+  
+  if (SHORTHAND_OPTIONS.includes(choice)) {
+    choice = LONGHAND_OPTIONS[SHORTHAND_OPTIONS.indexOf(choice)];
+  }
+  
+  return playerChoice;
+}
+
+function declareRoundWinner(playerChoice, computerChoice) {
+  if (CHOICES[playerChoice].beats.includes(computerChoice)) {
+    prompt('You Win!');
     return 'Human';
-  } else if (choice === computerChoice) {
+  } else if (playerChoice === computerChoice) {
+    prompt("It's a Tie!");
     return 'tie';
   } else {
+    prompt('Computer Wins!');
     return 'computer';
   }
+}
+
+function declareGrandWinner(humanWinCount, computerWinCount) {
+  if (humanWinCount === WIN_SCORE) {
+    prompt("You are the Grand Winner!");
+    return true;
+  } else if (computerWinCount === WIN_SCORE) {
+    prompt("Computer is the Grand Winner");
+    return true;
+  }
+}
+
+function askToPlayAgain() {
+    prompt('Do you want to play again (y/n)?');
+  
+    let playAgain = readline.question().toLowerCase();
+    do {
+      if (playAgain = 'y') return true;
+      if (playAgain = 'n') return false;
+      prompt('Please enter "y" or "n".');
+      playAgain = readline.question().toLowerCase();
+    } while (true)
 }
 
 let humanWinCount = 0;
@@ -53,63 +95,37 @@ prompt('ProTip: Use first letter for quick selection (use "k" for Spock)');
 console.log("");
 
 while (true) {
-
-  prompt(`Choose one: ${Object.keys(CHOICES).join(', ')}`);
-  let choice = readline.question();
-
-  while (!LONGHAND_OPTIONS.includes(choice) && 
-  !SHORTHAND_OPTIONS.includes(choice)) {
-    prompt("That's not a valid choice");
-    choice = readline.question();
-  }
+  
+  let playerChoice = getPlayerChoice();
 
   console.clear();
-
-  if (SHORTHAND_OPTIONS.includes(choice)) {
-    choice = LONGHAND_OPTIONS[SHORTHAND_OPTIONS.indexOf(choice)];
-  }
 
   let randomIndex = Math.floor(Math.random() * Object.keys(CHOICES).length);
   let computerChoice = LONGHAND_OPTIONS[randomIndex];
   
-  prompt(`You chose ${choice}, computer chose ${computerChoice}`);
+  prompt(`You chose ${playerChoice}, computer chose ${computerChoice}`);
 
-  let winner = determineWinner(choice, computerChoice);
-
+  let winner = declareRoundWinner(playerChoice, computerChoice);
+  
   if (winner === 'computer') {
-    prompt('Computer Wins!');
     computerWinCount += 1;
   } else if (winner === 'human') {
-    prompt('You Win!');
     humanWinCount += 1;
-  } else {
-    prompt("It's a tie!");
-  }
+  } 
 
   prompt(`Human: ${humanWinCount}, Computer: ${computerWinCount}`);
-
-  if (humanWinCount === WIN_SCORE) {
-    prompt("You are the Grand Winner!");
-    isGrandWinner = true;
-  } else if (computerWinCount === WIN_SCORE) {
-    prompt("Computer is the Grand Winner");
-    isGrandWinner = true;
-  }
-
+  
+  isGrandWinner = declareGrandWinner(humanWinCount, computerWinCount);
+  
   if (isGrandWinner) {
-    prompt('Do you want to play again (y/n)?');
-    let answer = readline.question().toLowerCase();
-    while (answer !== 'n' && answer !== 'y') {
-      prompt('Please enter "y" or "n".');
-      answer = readline.question().toLowerCase();
-    }
-
-    if (answer !== 'y') break;
-
-    humanWinCount = 0;
-    computerWinCount = 0;
-    isGrandWinner = false;
-    console.clear();
+    let playAgain = askToPlayAgain();
+    if (!playAgain) break;
   }
+
+  humanWinCount = 0;
+  computerWinCount = 0;
+  isGrandWinner = false;
+  console.clear();
+}
   
 }
