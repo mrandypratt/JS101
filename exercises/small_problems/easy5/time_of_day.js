@@ -1,23 +1,45 @@
-const MINUTES_IN_HOUR = 60;
-const HOURS_IN_A_DAY = 24;
-const MINUTES_PER_DAY = HOURS_IN_A_DAY * MINUTES_IN_HOUR;
+const MINUTES_PER_HOUR = 60;
+const HOURS_PER_DAY = 24;
+const MINUTES_PER_DAY = HOURS_PER_DAY * MINUTES_PER_HOUR;
+
+function stringify(hours, minutes) {
+  if (hours < 10) {
+    hours = '0' + hours;
+  }
+  if (minutes < 10) {
+    minutes = '0' + minutes;
+  }
+  return hours + ':' + minutes;
+}
 
 function timeOfDay(minutes) {
   let hours = 0;
-  if (minutes >= MINUTES_IN_HOUR || minutes <= -MINUTES_IN_HOUR) {
-    hours = Math.floor(minutes / MINUTES_IN_HOUR);
-    minutes = minutes % MINUTES_IN_HOUR;
-  }
-  if (hours >= HOURS_IN_A_DAY || hours <= -HOURS_IN_A_DAY) {
-    hours = Math.floor(hours / HOURS_IN_A_DAY);
+  //return zero if zero
+  if (minutes === 0) return stringify(minutes, hours)
+
+  //Store negative minutes as Boolean and remove sign
+  let beforeMidnight = minutes < 0;
+  minutes = Math.abs(minutes);
+
+  //extract multiple days from minutes
+  while (minutes >= MINUTES_PER_DAY) {
+    minutes -= MINUTES_PER_DAY;
   }
 
-  if (minutes < 0 || hours < 0) {
-    minutes += MINUTES_IN_HOUR;
-    hours += HOURS_IN_A_DAY - 1;
+  //extract hours from minutes
+  while (minutes >= MINUTES_PER_HOUR) {
+    hours += 1
+    minutes -= MINUTES_PER_HOUR
   }
-  return hours + ":" + minutes;
 
+  //calculate conditionally if before or after midnight
+  if (beforeMidnight) {
+    hours = HOURS_PER_DAY - 1 - hours;
+    minutes = MINUTES_PER_HOUR - minutes;
+  }
+
+  //stringify answer
+  return stringify(hours, minutes);
 }
 
 
