@@ -1,17 +1,27 @@
 const MINUTES_PER_HOUR = 60;
+const MINUTES_PER_DAY = MINUTES_PER_HOUR * 24;
+
+function getMinutes(timeString, afterMidnight) {
+  if (timeString === '00:00' || timeString == '24:00') return 0;
+
+  let hours = Number(timeString.slice(0, 2));
+  let minutes = Number(timeString.slice(3, 5));
+
+  let totalMinutes = (hours * MINUTES_PER_HOUR) + minutes;
+
+  if (afterMidnight) {
+    return totalMinutes;
+  } else {
+    return MINUTES_PER_DAY - totalMinutes;
+  }
+}
 
 function afterMidnight(timeString) {
-  let hours = Number(timeString.slice(0, 1));
-  console.log(hours);
-  let minutes = Number(timeString.slice(3, 4));
-  console.log(minutes);
-
-  let minutesAfterMidnight = hours * MINUTES_PER_HOUR + minutes;
-  return minutesAfterMidnight;
+  return getMinutes(timeString, true);
 }
 
 function beforeMidnight(timeString) {
-  return timeString;
+  return getMinutes(timeString, false);
 }
 
 console.log(afterMidnight('00:00')); // === 0);
