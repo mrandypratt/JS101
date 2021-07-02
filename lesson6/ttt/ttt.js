@@ -1,14 +1,14 @@
 const readline = require('readline-sync');
-const BOARD = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '];
+const BOARD = [];
+const NUMBER_OF_SQUARES = 9;
 
 function prompt(string) {
   console.log(`${string}`);
 }
 
 function userResponse() {
-  let response = readline.question('Press "enter" to continue..');
+  readline.question('Press "enter" to continue..');
   console.clear();
-  return;
 }
 
 function getRandomUserPlayer() {
@@ -17,82 +17,65 @@ function getRandomUserPlayer() {
 }
 
 function printCurrentBoard() {
-  let column = 0;
-  for (let row = 1; row <= 3; row++) {
-    console.log(`${BOARD[(row * column)]} | ${BOARD[(row * column) + 1]} | ${BOARD[(row * column) + 2]}`);
-    if (row <= 2) {
-      console.log("---------");
-    }
-    column++;
-  }
-}
-
-function printMoveOptions() {
-  prompt("Board Options");
-  let column = 0;
-  for (let row = 1; row <= 3; row++) {
-    console.log(`${(row * column) + 1} | ${(row * column) + 2} | ${(row * column) + 3}`);
-    if (row <= 2) {
-      console.log("---------");
-    }
-    column++;
-  }
+  prompt("-Current-   --Move---");
+  prompt("--Board--   -Options-");
+  prompt(`${BOARD[0]} | ${BOARD[1]} | ${BOARD[2]}   1 | 2 | 3`);
+  prompt("---------   ---------");
+  prompt(`${BOARD[3]} | ${BOARD[4]} | ${BOARD[5]}   4 | 5 | 6`);
+  prompt("---------   ---------");
+  prompt(`${BOARD[6]} | ${BOARD[7]} | ${BOARD[8]}   7 | 8 | 9`);
+  prompt("");
 }
 
 function getMoveIndex(userPlayer, currentPlayer) {
   if (userPlayer === currentPlayer) {
-    return getMoveFromUser();
+    return getMoveIndexFromUser();
   } else {
-    return getMoveFromComputer();
+    return getMoveIndexFromComputer();
   }
 }
 
-function getMoveFromUser() {
+function getMoveIndexFromUser() {
   while (true) {
     console.clear();
-    prompt('Select a move ("help" for options)');
     printCurrentBoard();
-    let move = readline.question();
+    prompt('Select a move: 1-9');
+    let userMoveSection = readline.question();
     console.clear();
-
-    if (move.toLowerCase() === 'help') {
-      printMoveOptions();
-      userResponse();
-    } else if (isValidMove(Number(move))) {
-        return Number(move) - 1;
-      }
+    let moveIndex = Number(userMoveSection) - 1;
+    if (isValidMove(moveIndex)) {
+      return moveIndex;
+    }
   }
 }
 
-function getMoveFromComputer() {
+function getMoveIndexFromComputer() {
   while (true) {
-    let emptySpaces = BOARD.filter(index => index === ' ');
-    let move = Math.floor(emptySpaces.length * Math.random()) + 1;
-    if (isValidMove(move)) {
-      prompt("Computer's Move")
-      return move - 1;
+    let moveIndex = Math.floor(BOARD.length * Math.random());
+    if (isValidMove(moveIndex)) {
+      return moveIndex;
     }
   }
 }
 
-function isValidMove(move) {
+function isValidMove(moveIndex) {
   if (
-    move >= 1 && 
-    move <= 9 &&
-    BOARD[move - 1] === ' ') {
-      return true;
-    } else {
-      return false;
-    }
+    moveIndex >= 0 &&
+    moveIndex <= 8 &&
+    BOARD[moveIndex] === ' ') {
+    return true;
+  } else {
+    return false;
+  }
 }
 
 function isWinState() {
   let winStates = [];
 
   //Horizontal Wins
-  winStates.push(winTest[0, 1, 2]);
-  winStates.push(winTest[3, 4, 5]);
-  winStates.push(winTest[6, 7, 8]);
+  winStates.push(winTest([0, 1, 2]));
+  winStates.push(winTest([3, 4, 5]));
+  winStates.push(winTest([6, 7, 8]));
 
   //Vertical
   winStates.push(winTest([0, 3, 6]));
@@ -103,13 +86,17 @@ function isWinState() {
   winStates.push(winTest([0, 4, 8]));
   winStates.push(winTest([2, 4, 6]));
 
-  return winStates.every(result => result === false);
+  return winStates.includes(true);
 }
 
 function winTest(winArray) {
-  return winArray.every(value => {
-    return (value === 'x' || value === 'o');
-  });
+  let xWins = winArray.every(moveIndex => (BOARD[moveIndex] === 'x'));
+  let oWins = winArray.every(moveIndex => (BOARD[moveIndex] === 'o'));
+  if (xWins || oWins) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
 function isBoardFull() {
@@ -118,46 +105,58 @@ function isBoardFull() {
   });
 }
 
-function switchPlayer(currentPlayer) {
-  if (currentPlayer === 'x') {
-    return 'o';
-  } else {
-    return 'x';
-  }
+function declareWinner(currentPlayer) {
+  console.clear();
+  prompt(`${currentPlayer} Wins!`);
+  prompt('');
+  printCurrentBoard();
+  userResponse();
+}
+
+function declareDraw() {
+  console.clear();
+  prompt(`It's a Draw!`);
+  printCurrentBoard();
+  userResponse();
 }
 
 function doesUserWantToPlayAgain() {
   while (true) {
+    console.clear();
     prompt("Would you like to play again? (y/n)");
     let response = readline.question();
     if (response === 'y') return true;
     if (response === 'n') return false;
-    prompt(`${response} is not a valid response.`)
+    prompt(`${response} is not a valid response.`);
+    userResponse();
   }
 }
 
 console.clear();
 
 prompt('Welcome to Tic Tac Toe!');
-userResponse();
-
-printMoveOptions();
-userResponse();
+prompt('');
 
 let playAgain = true;
 
 while (playAgain) {
 
+  for (let space = 0; space < NUMBER_OF_SQUARES; space++) {
+    BOARD[space] = " ";
+  }
+
   let userPlayer = getRandomUserPlayer();
   prompt(`You are player "${userPlayer}"`);
+  prompt('Player "x" goes first.');
+  prompt("");
   userResponse();
 
   let currentPlayer = 'x';
   let moveIndex;
 
   while (true) {
+    printCurrentBoard();
     prompt(`It is ${currentPlayer}'s turn`);
-    printCurrentBoard()
 
     moveIndex = getMoveIndex(userPlayer, currentPlayer);
     console.clear();
@@ -165,15 +164,17 @@ while (playAgain) {
     BOARD[moveIndex] = currentPlayer;
 
     if (isWinState()) {
-      prompt(`${currentPlayer} Wins!`);      
+      declareWinner(currentPlayer);
       break;
     } else if (isBoardFull()) {
-      prompt(`It is a Draw!`);
+      declareDraw();
       break;
     } else {
-      currentPlayer = switchPlayer(currentPlayer);
+      currentPlayer = (currentPlayer === 'x') ? 'o' : 'x';
     }
   }
-  
+
   playAgain = doesUserWantToPlayAgain();
+  console.clear();
+  if (!playAgain) prompt("Thank you for playing. Goodbye!");
 }
