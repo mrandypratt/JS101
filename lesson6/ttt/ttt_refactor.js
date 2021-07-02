@@ -78,9 +78,10 @@ function twoInARowIndex(playerMark) {
     winLine.forEach(space => {
       if (BOARD[space] === playerMark) playerMarkCounter += 1;
       if (BOARD[space] === ' ') emptySpace = space;
-      if ((emptySpace !== null) && (playerMarkCounter === 2)) {
-        match = emptySpace;
-      }
+      if (
+        (emptySpace !== null) && 
+        (playerMarkCounter === 2)
+        ) match = emptySpace;
     });
   });
   return match;
@@ -92,10 +93,10 @@ function isValidMove(moveIndex) {
 
 function isWinState() {
   let xWins = WIN_LINES.map(winLine => {
-    return winLine.every(moveIndex => BOARD[moveIndex] === 'x');
+    return winLine.every(moveIndex => BOARD[moveIndex] === 'x')
   }).includes(true);
   let oWins = WIN_LINES.map(winLine => {
-    return winLine.every(moveIndex => BOARD[moveIndex] === 'o');
+    return winLine.every(moveIndex => BOARD[moveIndex] === 'o')
   }).includes(true);
   return !!(xWins || oWins);
 }
