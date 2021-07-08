@@ -4,44 +4,13 @@ const X_MARK = 'x';
 const O_MARK = 'o';
 const EMPTY_MARK = " ";
 const NUMBER_OF_SQUARES = 9;
-const GRAND_WIN_SCORE = 3;
 const WIN_LINES = [
   [0, 1, 2], [3, 4, 5], [6, 7, 8], //rows
   [0, 3, 6], [1, 4, 7], [2, 5, 8], //columns
   [0, 4, 8], [2, 4, 6]]; //diagonal
 
-let totalScore = {
-  cpu: 0,
-  user: 0,
-};
-
-let round = 1;
-
 function prompt(string) {
   console.log(`${string}`);
-}
-
-function userResponse() {
-  readline.question('\nPress "enter" to continue..');
-  console.clear();
-}
-
-function welcomeMessage() {
-  prompt('Welcome to Tic Tac Toe!\n');
-  prompt('Each win counts as a point.');
-  prompt(`First to ${GRAND_WIN_SCORE} points wins.`);
-  userResponse();
-}
-
-function displayScore(userPlayer, cpuPlayer) {
-  prompt(`    ROUND ${round}     `);
-  prompt(`---------------`);
-  prompt('     SCORE     ');
-  prompt(`Player ${totalScore.user} | CPU ${totalScore.cpu}`);
-  prompt(`---------------`);
-  if (userPlayer === X_MARK) prompt('You move first.\n');
-  if (cpuPlayer === X_MARK) prompt('Computer moves first\n');
-  userResponse();
 }
 
 function initializeBoard() {
@@ -50,45 +19,16 @@ function initializeBoard() {
   }
 }
 
-function playRound() {
-  let userPlayer = getRandomUserPlayer();
-  let cpuPlayer = userPlayer === X_MARK ? O_MARK : X_MARK;
-
-  displayScore(userPlayer, cpuPlayer);
-
-  let currentPlayer = X_MARK;
-  let moveIndex;
-
-  while (true) {
-    printCurrentBoard();
-
-    moveIndex = getMoveIndex(userPlayer, cpuPlayer, currentPlayer);
-    console.clear();
-
-    board[moveIndex] = currentPlayer;
-
-    let roundOver = isRoundOver(currentPlayer, userPlayer);
-
-    if (roundOver) break;
-
-    currentPlayer = (currentPlayer === X_MARK) ? O_MARK : X_MARK;
-  }
+function userResponse() {
+  readline.question('\nPress "enter" to continue..');
+  console.clear();
 }
 
-function isRoundOver(currentPlayer, userPlayer) {
-  if (isWinState()) {
-    let didUserWin = currentPlayer === userPlayer;
-    declareWinner(didUserWin);
-    addPointToWinner(didUserWin);
-    return true;
-  } else if (isBoardFull()) {
-    declareDraw();
-    return true;
-  } else {
-    return false;
-  }
+function displayPlayer(userPlayer) {
+  prompt(`You are player "${userPlayer}"`);
+  prompt('Player "x" goes first.');
+  userResponse();
 }
-
 function getRandomUserPlayer() {
   let player = [X_MARK, O_MARK][Math.floor(Math.random() * 2)];
   return player;
@@ -165,7 +105,7 @@ function twoInARowIndex(playerMark) {
 }
 
 function isValidMove(moveIndex) {
-  return (moveIndex >= 0 && moveIndex <= 8 && board[moveIndex] === EMPTY_MARK);
+  return !!(moveIndex >= 0 && moveIndex <= 8 && board[moveIndex] === EMPTY_MARK);
 }
 
 function isWinState() {
@@ -184,22 +124,17 @@ function isBoardFull() {
   });
 }
 
-function declareWinner(didUserWin) {
+function declareWinner(currentPlayer) {
   console.clear();
-  let winnerMessage = didUserWin ? '------You Won!-----\n' : '--Computer Wins!--\n';
-  prompt(winnerMessage);
+  prompt(`${currentPlayer} Wins!`);
+  prompt('');
   printCurrentBoard();
   userResponse();
 }
 
-function addPointToWinner(didUserWin) {
-  if (didUserWin) totalScore.user += 1;
-  if (!didUserWin) totalScore.cpu += 1;
-}
-
 function declareDraw() {
   console.clear();
-  prompt(`---It's a Draw!---\n`);
+  prompt(`It's a Draw!`);
   printCurrentBoard();
   userResponse();
 }
@@ -217,38 +152,45 @@ function doesUserWantToPlayAgain() {
   }
 }
 
-function displayGrandWinner() {
-  console.clear();
-  if (totalScore.user === GRAND_WIN_SCORE) {
-    prompt("***You are the GRAND WINNER!***\n");
-  } else {
-    prompt("***Computer is the GRAND WINNER!***\n");
-  }
-  prompt("--FINAL SCORE--");
-  prompt(`Player ${totalScore.user} | CPU ${totalScore.cpu}\n`);
-  prompt(`Total Rounds: ${round}.`);
-  userResponse();
-}
+console.clear();
 
-function playTourney() {
-  console.clear();
-
-  welcomeMessage();
-
-  while (!Object.values(totalScore).includes(GRAND_WIN_SCORE)) {
-    initializeBoard();
-    playRound();
-    round += 1;
-  }
-
-  displayGrandWinner();
-}
+prompt('Welcome to Tic Tac Toe!\n');
 
 let playAgain = true;
+
 while (playAgain) {
-  totalScore.cpu = 0;
-  totalScore.user = 0;
-  round = 1;
-  playTourney();
+
+  initializeBoard();
+
+  let userPlayer = getRandomUserPlayer();
+  let cpuPlayer = userPlayer === X_MARK ? O_MARK : X_MARK;
+
+  displayPlayer(userPlayer);
+
+  let currentPlayer = X_MARK;
+  let moveIndex;
+
+  while (true) {
+    printCurrentBoard();
+    prompt(`It is ${currentPlayer}'s turn`);
+
+    moveIndex = getMoveIndex(userPlayer, cpuPlayer, currentPlayer);
+    console.clear();
+
+    board[moveIndex] = currentPlayer;
+
+    if (isWinState()) {
+      declareWinner(currentPlayer);
+      break;
+    } else if (isBoardFull()) {
+      declareDraw();
+      break;
+    } else {
+      currentPlayer = (currentPlayer === X_MARK) ? O_MARK : X_MARK;
+    }
+  }
+
   playAgain = doesUserWantToPlayAgain();
+  console.clear();
+  if (!playAgain) prompt("Thank you for playing. Goodbye!");
 }
