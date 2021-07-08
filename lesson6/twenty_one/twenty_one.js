@@ -64,7 +64,7 @@ let deck = [
 let hands = {
   human: [],
   dealer: []
-}
+};
 
 function welcomeAndExplainGame() {
   while (true) {
@@ -76,43 +76,52 @@ function welcomeAndExplainGame() {
   }
 }
 
-function displayInstructions() {
-  console.clear();
-  console.log("---HELP MENU---\n")
-  console.log("RULES:\n")
+function instructionsRules() {
+  console.log("---HELP MENU---\n");
+  console.log("RULES:\n");
   console.log("Your primary objective is to get closer to 21 than the dealer without going over.\n");
   console.log("1. Deal: Each player starts with two cards");
   console.log("2. Hit or Stay: player makes a choice to draw a card (hit) or to stop drawing cards (stay).");
   console.log("3. Bust: If a player exceeds 21 points, they lose.");
-  console.log("4. If no player busts and both stay, the score closest to 21 wins.\n")
+  console.log("4. If no player busts and both stay, the score closest to 21 wins.\n");
   requestEnter();
+}
 
+function instructionsTurns() {
   console.log("---HELP MENU---\n");
   console.log("YOUR TURN:\n");
-  console.log("Options:\n")
+  console.log("Options:\n");
   console.log("Hit: Draw another card and add its value to your total score.");
-  console.log("Stay: Resign from drawing any additional cards.")
-  console.log("Bust: If your score exceeds 21, you lose.\n")
+  console.log("Stay: Resign from drawing any additional cards.");
+  console.log("Bust: If your score exceeds 21, you lose.\n");
   requestEnter();
 
   console.log("---HELP MENU---\n");
   console.log("DEALER'S TURN:\n");
   console.log("Hit: Dealer will always hit until their score reaches 17 or higher.");
-  console.log("Bust: If the dealer's score exceeds 21 and you have selected to stay, you win.\n")
+  console.log("Bust: If the dealer's score exceeds 21 and you have selected to stay, you win.\n");
   requestEnter();
+}
 
+function instructionsPointValues() {
   console.log("---HELP MENU---\n");
   console.log("POINT VALUES:\n");
   console.log("2-10: face value");
   console.log("Jack, Queen, King: 10");
   console.log("Ace: 1 or 11\n");
-  console.log("NOTE: Ace values change based on your total score.\n")
+  console.log("NOTE: Ace values change based on your total score.\n");
   console.log("Example:");
   console.log("1. Ace (11) and 5 in hand => 16 points");
   console.log("2. You hit and receive a King (10)");
-  console.log("3. Ace (now 1), King (10), and 5 in hand => 16\n")
+  console.log("3. Ace (now 1), King (10), and 5 in hand => 16\n");
   requestEnter();
+}
 
+function displayInstructions() {
+  console.clear();
+  instructionsRules();
+  instructionsTurns();
+  instructionsPointValues();
 }
 
 function requestEnter() {
@@ -124,9 +133,9 @@ function requestEnterOrHelp() {
   let response = readline.question('\nPress "enter" to continue or "help" for instructions\n').toLowerCase();
   if (response === 'help') {
     displayInstructions();
-    return 'help';
   }
   console.clear();
+  return response;
 }
 
 function dealCard() {
@@ -149,11 +158,11 @@ function humanTurn() {
       hands.human.push(dealCard());
       if (isBust(calculateScore('human'))) {
         return calculateScore('human');
-      };
+      }
     } else if (['stay', 's'].includes(response)) {
       return calculateScore('human');
     } else {
-      console.log(`${response} is not a valid response.`)
+      console.log(`${response} is not a valid response.`);
       requestEnter();
     }
   }
@@ -166,20 +175,20 @@ function displayCardsPlayerTurn() {
   for (let card in hands['human']) {
     humanCards.push(hands['human'][card].face);
   }
-  console.log(`You have: ${humanCards.join(' and ')}\n`)
+  console.log(`You have: ${humanCards.join(' and ')}\n`);
 }
 function displayCards() {
   let dealerCards = [];
   for (let card in hands['dealer']) {
     dealerCards.push(hands['dealer'][card].face);
   }
-  console.log(`Dealer has: ${dealerCards.join(' and ')}\n`)
+  console.log(`Dealer has: ${dealerCards.join(' and ')}`);
 
   let humanCards = [];
   for (let card in hands['human']) {
     humanCards.push(hands['human'][card].face);
   }
-  console.log(`You have: ${humanCards.join(' and ')}\n`)
+  console.log(`You have: ${humanCards.join(' and ')}\n`);
 }
 
 function calculateScore(player) {
@@ -217,7 +226,7 @@ function dealerTurn() {
     console.log(`Your score is ${calculateScore('human')}\nDealer score is ${calculateScore('dealer')}`);
     requestEnter();
 
-    let score = calculateScore('dealer')
+    let score = calculateScore('dealer');
     if (isBust(score) || (score > HIT_MAX)) {
       return score;
     } else {
@@ -260,19 +269,19 @@ function requestToPlayAgain() {
     console.clear();
     if (['y', 'yes'].includes(response)) return true;
     if (['n', 'no'].includes(response)) return false;
-    console.log(`${response} is not a valid response.`)
+    console.log(`${response} is not a valid response.`);
   }
 }
 
 welcomeAndExplainGame();
-playAgain = true;
+let playAgain = true;
 
 while (playAgain) {
   while (true) {
     hands.human.splice(0);
     hands.dealer.splice(0);
-    
-    for (let i = 0; i < 2; i++) {
+
+    for (let card = 0; card < 2; card++) {
       hands['human'].push(dealCard());
       hands['dealer'].push(dealCard());
     }
