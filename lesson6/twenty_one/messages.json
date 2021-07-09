@@ -1,0 +1,10 @@
+{
+  "welcome": "---Welcome to 21!---",
+  "instructions": {
+    "rules": "---HELP MENU---\n\nRULES:\n\nYour primary objective is to get closer to 21 than the dealer without going over.\n\n1. Deal: Each player starts with two cards\n2. Hit or Stay: player makes a choice to draw a card (hit) or to stop drawing cards (stay).\n3. Bust: If a player exceeds 21 points, they lose.\n4. If no player busts and both stay, the score closest to 21 wins.",
+    "playerTurn": "---HELP MENU---\n\nYOUR TURN:\n\nOptions:\n\nHit: Draw another card and add its value to your total score.\nStay: Resign from drawing any additional cards.\nBust: If your score exceeds 21, you lose.",
+    "dealerTurn": "---HELP MENU---\n\nDEALER'S TURN:\n\nHit: Dealer will always hit until their score reaches 17 or higher.\nBust: If the dealer's score exceeds 21 and you have selected to stay, you win.",
+    "points": "---HELP MENU---\n\nPOINT VALUES:\n\n2-10: face value\nJack, Queen King: 10\nAce: 1 or 11\n\nNOTE: Ace values change based on your total score.\n\nExample:\n1 Ace (11) and 5 in hand => 16 points\n2. You hit and receive a King (10)\n3. Ace (now 1), King"
+  }
+}
+
