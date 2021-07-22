@@ -29,7 +29,6 @@ function rotateRightmostDigits(bigNumber, rotation) {
   let reverseBigNumberArr = String(bigNumber).split('').reverse();
   let newLastDigit = reverseBigNumberArr.splice(rotation - 1, 1);
   return Number(reverseBigNumberArr.reverse().concat(newLastDigit).join(''));
-
 }
 
 
