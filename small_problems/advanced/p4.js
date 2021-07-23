@@ -61,15 +61,19 @@ Algorithm:
 */
 
 function rotate90(matrix) {
-  console.log(matrix)
   let newMatrix = [];
-  for (let row = 0; row < matrix[0].length; row++) {
+  let oldNumRows = matrix.length;
+  let oldNumColumns = matrix[0].length;
+  let newNumRows = oldNumColumns;
+  let newNumColumns = oldNumRows;
+  for (let row = 0; row < newNumRows; row++) {
     newMatrix.push([]);
   }
 
-  for (let row = 0; row < matrix[0].length; row++) {
-    for (let column = 0; column < matrix.length; column++) {
-      newMatrix[column][matrix[0].length - 1 - row] = matrix[row][column];
+
+  for (let row = 0; row < oldNumColumns; row++) {
+    for (let column = 0; column < oldNumRows; column++) {
+      newMatrix[row][column] = matrix[oldNumRows - column - 1][row]
     }
   }
   return newMatrix;
